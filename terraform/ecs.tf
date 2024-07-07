@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "strapi" {
       # repositoryCredentials: {
       #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
       #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
-        }
+        # }
       cpu       = 256
       memory    = 512
       essential = true
@@ -42,6 +42,7 @@ resource "aws_ecs_task_definition" "strapi" {
     },
   ])
 }
+
 
 resource "aws_ecs_task_definition" "nginx" {
   family = "nginx"
@@ -58,6 +59,7 @@ resource "aws_ecs_task_definition" "nginx" {
       # repositoryCredentials: {
       #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
       #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
+    # }
       cpu       = 256
       memory    = 512
       essential = true
@@ -72,8 +74,7 @@ resource "aws_ecs_task_definition" "nginx" {
         }
       ]
     },
-  }
-  ])
+])
 }
 
 resource "aws_ecs_service" "strapi" {
