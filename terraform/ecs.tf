@@ -16,7 +16,7 @@ resource "aws_ecs_cluster_capacity_providers" "capacity_provider" {
 
 resource "aws_ecs_task_definition" "strapi" {
   family = "strapi"
-  requires_compatibilities = ["FARGATE_SPOT"]
+  requires_compatibilities = ["FARGATE"]
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
   cpu       = 256
@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "strapi" {
 
 resource "aws_ecs_task_definition" "nginx" {
   family = "nginx"
-  requires_compatibilities = ["FARGATE_SPOT"]
+  requires_compatibilities = ["FARGATE"]
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
   cpu       = 256
