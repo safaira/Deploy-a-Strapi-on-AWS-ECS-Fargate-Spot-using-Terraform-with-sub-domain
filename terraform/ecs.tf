@@ -76,7 +76,7 @@ resource "aws_ecs_service" "strapi" {
   name               = "strapi"
   cluster            = aws_ecs_cluster.cluster.id
   platform_version   = "LATEST"
-  launch_type        = "FARGATE_SPOT"
+  launch_type        = "FARGATE"
   task_definition    = aws_ecs_task_definition.strapi.arn
   desired_count      = 1
   #  depends_on       = [aws_iam_role_policy.foo]
@@ -98,7 +98,7 @@ resource "aws_ecs_service" "nginx" {
   name               = "nginx"
   cluster            = aws_ecs_cluster.cluster.id
   platform_version   = "LATEST"
-  launch_type        = "FARGATE_SPOT"
+  launch_type        = "FARGATE"
   task_definition    = aws_ecs_task_definition.nginx.arn
   desired_count      = 1
   
