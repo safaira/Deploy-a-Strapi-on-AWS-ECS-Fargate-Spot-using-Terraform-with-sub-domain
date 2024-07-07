@@ -26,9 +26,10 @@ resource "aws_ecs_task_definition" "strapi" {
     {
       name      = "strapiapp"
       image     = "saiyashaikh/strapi-app:npm17",
-    #   "repositoryCredentials": {
-    #         "credentialsParameter": "arn:aws:secretsmanager:region:aws_account_id:secret:secret_name"
-    #     }
+      repositoryCredentials: {
+        credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
+                                 "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
+        }
       cpu       = 256
       memory    = 512
       essential = true
@@ -54,6 +55,9 @@ resource "aws_ecs_task_definition" "nginx" {
     {
       name      = "nginx"
       image     = "saiyashaikh/nginx_ssl:latest",
+      repositoryCredentials: {
+        credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
+                                 "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
       cpu       = 256
       memory    = 512
       essential = true
