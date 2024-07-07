@@ -38,7 +38,13 @@ jobs:
       - name: Terraform Plan
         id: plan
         run:  terraform plan -var="docker_hub_username=${{ secrets.DOCKER_HUB_USERNAME }}" -var="docker_hub_password=${{ secrets.DOCKER_HUB_PASSWORD }}"
+<<<<<<< HEAD
 
       - name: Terraform apply
         run: terraform apply -var="docker_hub_username=${{ secrets.DOCKER_HUB_USERNAME }}" -var="docker_hub_password=${{ secrets.DOCKER_HUB_PASSWORD }}" -auto-approve    
+=======
+      
+      - name: Terraform destroy
+        run: terraform destroy -var="docker_hub_username=${{ secrets.DOCKER_HUB_USERNAME }}" -var="docker_hub_password=${{ secrets.DOCKER_HUB_PASSWORD }}" -auto-approve    
+>>>>>>> 00439dd947a33f0b06268db86e78449f0e66f74a
             
