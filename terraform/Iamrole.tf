@@ -44,5 +44,5 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 resource "aws_iam_role_policy_attachment" "ecs_secret_permission_attachment" {
   role       = aws_iam_role.ecsTaskExecutionRole.name
-  policy_arn = "aws_iam_policy.ecs_secret_permission.arn"
+  policy_arn = aws_iam_policy.ecs_secret_permission.arn
 }
