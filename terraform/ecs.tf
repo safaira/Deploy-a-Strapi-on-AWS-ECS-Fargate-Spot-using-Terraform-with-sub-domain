@@ -91,6 +91,7 @@ resource "aws_ecs_service" "strapi" {
     security_groups  = [aws_security_group.ecs_sg_grp.id]
     subnets          = [aws_subnet.subnet1.id]
   }
+}
 
 resource "aws_ecs_service" "nginx" {
   name               = "nginx"
