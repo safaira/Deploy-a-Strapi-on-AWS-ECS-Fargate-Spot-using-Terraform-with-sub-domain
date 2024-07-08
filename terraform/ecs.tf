@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "strapi" {
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
   cpu       = 512
-  memory    = 1 # 1 GB
+  memory    = 1024 # 1 GB
 
   container_definitions = jsonencode([
     {
@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "strapi" {
       #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
         # }
       cpu       = 512
-      memory    = 1 # 1 GB
+      memory    = 1024 # 1 GB
       essential = true
       portMappings = [
         {
@@ -50,14 +50,14 @@ resource "aws_ecs_task_definition" "nginx" {
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
   cpu       = 512
-  memory    = 1 # 1 GB
+  memory    = 1024 # 1 GB
 
   container_definitions = jsonencode([
     {
       name      = "nginx"
       image     = "docker.io/saniyashaikh/nginx-rp-ssl:latest",
       cpu       = 512
-      memory    = 1 # 1 GB
+      memory    = 1024 # 1 GB
       essential = true
       portMappings = [
         {
