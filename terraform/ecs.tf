@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "strapi" {
   container_definitions = jsonencode([
     {
       name      = "strapiapp"
-      image     = "docker.io/saniyashaikh/strapi-app:npm17",
+      image     = "docker.io/saniyashaikh/strapi:latest",
       # repositoryCredentials: {
       #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
       #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "nginx" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = "docker.io/saniyashaikh/nginx-ssl:1",
+      image     = "docker.io/saniyashaikh/nginx-rp-ssl:latest",
       cpu       = 256
       memory    = 512
       essential = true

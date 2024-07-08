@@ -1,6 +1,6 @@
 FROM node:18 
 WORKDIR /srv/
-RUN sudo apt update -y 
+RUN apt update -y 
 COPY . .
 RUN npm install -y && npm install -g pm2
 EXPOSE 1337
