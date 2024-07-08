@@ -55,11 +55,7 @@ resource "aws_ecs_task_definition" "nginx" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = "docker.io/saniyashaikh/nginx_ssl:latest",
-      # repositoryCredentials: {
-      #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
-      #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
-    # }
+      image     = "docker.io/saniyashaikh/nginx-ssl:1",
       cpu       = 256
       memory    = 512
       essential = true
