@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "nginx" {
   container_definitions = jsonencode([
     {
       name      = "nginx"
-      image     = "docker.io/saniyashaikh/nginx-rp-ssl:latest",
+      image     = "docker.io/saniyashaikh/nginx-ssl:1",
       cpu       = 512
       memory    = 1024 # 1 GB
       essential = true
