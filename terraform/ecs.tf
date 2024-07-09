@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "strapi" {
   container_definitions = jsonencode([
     {
       name      = "strapiapp"
-      image     = "docker.io/saniyashaikh/strapi:latest",
+      image     = "docker.io/saniyashaikh/strapi:latest1",
       # repositoryCredentials: {
       #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
       #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
