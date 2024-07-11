@@ -19,19 +19,15 @@ resource "aws_ecs_task_definition" "strapi" {
   requires_compatibilities = ["FARGATE"]
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
-  cpu       = 512
-  memory    = 1024 # 1 GB
+  cpu       = 256
+  memory    = 512 
 
   container_definitions = jsonencode([
     {
       name      = "strapiapp"
       image     = "docker.io/saniyashaikh/strapi:latest",
-      # repositoryCredentials: {
-      #   credentialsParameter = [ "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_PASSWORD",
-      #                            "arn:aws:ssm:ap-south-1:687157172064:parameter/DOCKERHUB_USERNAME"]
-        # }
-      cpu       = 512
-      memory    = 1024 # 1 GB
+      cpu       = 256
+      memory    = 512 
       essential = true
       portMappings = [
         {
@@ -44,34 +40,34 @@ resource "aws_ecs_task_definition" "strapi" {
 }
 
 
-resource "aws_ecs_task_definition" "nginx" {
-  family = "nginx"
-  requires_compatibilities = ["FARGATE"]
-  execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
-  network_mode = "awsvpc"
-  cpu       = 512
-  memory    = 1024 # 1 GB
+# resource "aws_ecs_task_definition" "nginx" {
+#   family = "nginx"
+#   requires_compatibilities = ["FARGATE"]
+#   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
+#   network_mode = "awsvpc"
+#  cpu       = 256
+#  memory    = 512 
 
-  container_definitions = jsonencode([
-    {
-      name      = "nginx"
-      image     = "nginx:latest",
-      cpu       = 512
-      memory    = 1024 # 1 GB
-      essential = true
-      portMappings = [
-        {
-          containerPort = 80
-          hostPort      = 80
-        },
-        {
-          containerPort = 443
-          hostPort      = 443
-        }
-      ]
-    },
-])
-}
+#   container_definitions = jsonencode([
+#     {
+#       name      = "nginx"
+#       image     = "nginx:latest",
+#       cpu       = 256
+#       memory    = 512 
+#       essential = true
+#       portMappings = [
+#         {
+#           containerPort = 80
+#           hostPort      = 80
+#         },
+#         {
+#           containerPort = 443
+#           hostPort      = 443
+#         }
+#       ]
+#     },
+# ])
+# }
 
 resource "aws_ecs_service" "strapi" {
   name               = "strapi"
@@ -83,35 +79,41 @@ resource "aws_ecs_service" "strapi" {
   #  depends_on       = [aws_iam_role_policy.foo]
 
   # load_balancer {
-  #   target_group_arn = aws_lb_target_group.lb_tg.arn
-  #   container_name   = aws_ecs_task_definition.ecs_task.family
+  #   target_group_arn = aws_lb_target_group.target_group.arn
+  #   container_name   = aws_ecs_task_definition.strapi.family
   #   container_port   = 1337
   # }
 
   network_configuration {
     assign_public_ip = true
     security_groups  = [aws_security_group.ecs_sg_grp.id]
-    subnets          = [aws_subnet.subnet1.id]
+    subnets          = [aws_subnet.subnet1]
   }
 }
 
-resource "aws_ecs_service" "nginx" {
-  name               = "nginx"
-  cluster            = aws_ecs_cluster.cluster.id
-  platform_version   = "LATEST"
-  launch_type        = "FARGATE"
-  task_definition    = aws_ecs_task_definition.nginx.arn
-  desired_count      = 1
+# resource "aws_ecs_service" "nginx" {
+#   name               = "nginx"
+#   cluster            = aws_ecs_cluster.cluster.id
+#   platform_version   = "LATEST"
+#   launch_type        = "FARGATE"
+#   task_definition    = aws_ecs_task_definition.nginx.arn
+#   desired_count      = 1
+
+#   load_balancer {
+#     target_group_arn = aws_lb_target_group.target_group.arn
+#     container_name   = aws_ecs_task_definition.nginx.family
+#     container_port   = 443
+#   }
   
-  network_configuration {
-    assign_public_ip = true
-    security_groups  = [aws_security_group.ecs_sg_grp.id]
-    subnets          = [aws_subnet.subnet1.id]
-  }
-}
+#   network_configuration {
+#     assign_public_ip = true
+#     security_groups  = [aws_security_group.ecs_sg_grp.id]
+#     subnets          = [aws_subnet.subnet2.id]
+#   }
+# }
 
 resource "aws_security_group" "ecs_sg_grp" {
-  vpc_id      = aws_vpc.strapi_vpc.id
+  vpc_id      = aws_default_vpc.default_vpc.id
   description = "Security Group for Strapi Application"
   # ingress {
   #   from_port   = "22"

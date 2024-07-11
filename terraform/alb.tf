@@ -14,7 +14,7 @@ resource "aws_lb" "alb_strapi" {
 resource "aws_lb_target_group" "target_group" {
   name     = "my-target-group"
   port     = 1337
-  protocol = "HTTP"
+  protocol = "HTTPS"
   vpc_id   = aws_vpc.strapi_vpc.id  # VPC ID
 
   health_check {
@@ -36,7 +36,7 @@ resource "aws_lb_target_group" "target_group" {
 # HTTPS listener
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb_strapi.arn
-  port              = 80
+  port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = "arn:aws:acm:ap-south-1:687157172064:certificate/f25501e2-db2a-42b6-8f90-21698911e241"
@@ -74,6 +74,13 @@ resource "aws_lb_listener" "https" {
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
 
+  }
+
+    ingress {
+    from_port   = 1337
+    to_port     = 1337
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
 
