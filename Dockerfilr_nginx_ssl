@@ -16,4 +16,4 @@ COPY ./privkey.pem /etc/letsencrypt/live/saniya.superiorwires.com/privkey.pem
 EXPOSE 80
 EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
+RUN  systemctl reload nginx

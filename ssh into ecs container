@@ -1,0 +1,75 @@
+
+
+1)  To install the Session Manager plugin using the EXE installer
+        Download the installer using the following URL.
+https://s3.amazonaws.com/session-mana...
+      
+       command :  session-manager-plugin --version
+
+2)  Install or update the AWS CLI
+         Download and run the AWS CLI MSI installer for Windows (64-bit):
+          https://awscli.amazonaws.com/AWSCLIV2...
+
+          command : aws --version
+
+3) Add SSM permissions to the ecsTaskExecutionRole   role
+       You should add the following policy to your existing ecsTaskExecutionRole IAM role. This grants permission for the ECS task to connect with the SSM Session Manager service.
+
+{
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+       "Effect": "Allow",
+       "Action": [
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+       ],
+      "Resource": "*"
+      }
+   ]
+}
+
+4) Add ECS ExecuteCommand permission to your IAM USER
+
+Make sure your IAM USER contains a policy that allows the action ecs:ExecuteCommand. Otherwise, you’re not able to run the aws ecs execute-command in the AWS CLI to access the running container.
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "User access to ECS ExecuteCommand",
+            "Effect": "Allow",
+            "Action": "ecs:ExecuteCommand",
+            "Resource": "*"
+        }
+    ]
+}
+
+5) Enable ECS Exec for your ECS task and services
+
+To enable ECS Exec on an existing ECS service run:
+aws ecs update-service --cluster aws-ecs-cluster --task-definition nginx --service nginx    --enable-execute-command --desired-count 1
+
+To verify if a task has ExecuteCommand enabled you can run the aws ecs describe-tasks command to check its configuration.
+
+aws ecs describe-tasks --cluster aws-ecs-cluster  -–tasks taskid
+
+Example : aws ecs describe-tasks --cluster example-cluster  -–tasks 5210107e30a9470b9b093d1fb72e8d6a
+
+If everything went well, you’ll receive the following output with enableExecuteCommand set to true.
+
+
+6) Run the aws ecs execute command with the task id and container name to log in.
+                aws ecs execute-command --cluster aws-ecs-cluster  --task task-id  --container                    container-name  --interactive     --command "/bin/bash"
+
+
+
+strapi : 13.235.104.216
+nginx  :  3.110.193.174   ebde95aa592d4bc9b3c7dbc5b025f2ca
+
+
+aws ssm start-session \
+    --target ecs:aws-ecs-cluster _<ECS_container_ID>_ebde95aa592d4bc9b3c7dbc5b025f2ca-2531612879 \
+    --document-name AWS-StartPortForwardingSessionToRemoteHost \
+    --parameters '{"host":["URL"],"portNumber":["port_number"], "localPortNumber":["port_number"]}'
