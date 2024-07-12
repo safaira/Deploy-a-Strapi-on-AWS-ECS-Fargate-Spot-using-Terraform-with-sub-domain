@@ -1,4 +1,3 @@
-
 resource "aws_lb" "alb_strapi" {
   name               = "strapi-lb"
   internal           =  false
@@ -14,19 +13,24 @@ resource "aws_lb" "alb_strapi" {
 resource "aws_lb_target_group" "target_group" {
   name     = "my-target-group"
   port     = 1337
-  protocol = "HTTPS"
+  target_type = "ip"
+  protocol = "HTTP"
   vpc_id   = aws_default_vpc.default_vpc.id  # VPC ID
 
   health_check {
     path = "/"
+    protocol = "HTTP"
+
   }
 }
 
 # HTTP listener
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.alb_strapi.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:acm:ap-south-1:687157172064:certificate/f25501e2-db2a-42b6-8f90-21698911e241"
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.target_group.arn
@@ -34,18 +38,18 @@ resource "aws_lb_listener" "http" {
 }
 
 # HTTPS listener
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.alb_strapi.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:ap-south-1:687157172064:certificate/f25501e2-db2a-42b6-8f90-21698911e241"
+#resource "aws_lb_listener" "https" {
+ # load_balancer_arn = aws_lb.alb_strapi.arn
+  #port              = 80 
+ # protocol          = "Http"
+  #ssl_policy        = "ELBSecurityPolicy-2016-08"
+  #certificate_arn   = "arn:aws:acm:ap-south-1:687157172064:certificate/f25501e2-db2a-42b6-8f90-21698911e241"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
-  }
-}
+  #default_action {
+   # type             = "forward"
+    #target_group_arn = aws_lb_target_group.target_group.arn
+  #}
+#}
 
 
 # security group for the load balancer:
@@ -88,5 +92,3 @@ resource "aws_lb_listener" "https" {
     Name = "load balancer security group "
   }
 }
-
-

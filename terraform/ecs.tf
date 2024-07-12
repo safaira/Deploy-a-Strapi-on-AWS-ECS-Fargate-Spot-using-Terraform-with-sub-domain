@@ -15,19 +15,19 @@ resource "aws_ecs_cluster_capacity_providers" "capacity_provider" {
 }
 
 resource "aws_ecs_task_definition" "strapi" {
-  family = "strapi"
+  family = "strapiapp"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
   network_mode = "awsvpc"
-  cpu       = 256
-  memory    = 512 
+  cpu       = 512
+  memory    = 1024 
 
   container_definitions = jsonencode([
     {
       name      = "strapiapp"
       image     = "docker.io/saniyashaikh/strapi:latest",
-      cpu       = 256
-      memory    = 512 
+      cpu       = 512
+      memory    = 1024 
       essential = true
       portMappings = [
         {
@@ -78,11 +78,11 @@ resource "aws_ecs_service" "strapi" {
   desired_count      = 1
   #  depends_on       = [aws_iam_role_policy.foo]
 
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.target_group.arn
-  #   container_name   = aws_ecs_task_definition.strapi.family
-  #   container_port   = 1337
-  # }
+   load_balancer {
+     target_group_arn = aws_lb_target_group.target_group.arn
+     container_name   = aws_ecs_task_definition.strapi.family
+     container_port   = 1337
+   }
 
   network_configuration {
     assign_public_ip = true
@@ -153,4 +153,3 @@ resource "aws_security_group" "ecs_sg_grp" {
   }
 
 }
-
