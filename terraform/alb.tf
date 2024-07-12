@@ -4,7 +4,7 @@ resource "aws_lb" "alb_strapi" {
   internal           =  false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.load_balancer_security_group.id]  # Security group ID
-  subnets            = [aws_subnet.subnet1.id,aws_subnet.subnet2.id ]
+  subnets            = [aws_default_subnet.default_subnet_a.id,aws_default_subnet.default_subnet_b.id]
   
   tags = {
     Name = "strapi_lb"
@@ -15,23 +15,23 @@ resource "aws_lb_target_group" "target_group" {
   name     = "my-target-group"
   port     = 1337
   protocol = "HTTPS"
-  vpc_id   = aws_vpc.strapi_vpc.id  # VPC ID
+  vpc_id   = aws_default_vpc.default_vpc.id  # VPC ID
 
   health_check {
     path = "/"
   }
 }
 
-# # HTTP listener
-# resource "aws_lb_listener" "http" {
-#   load_balancer_arn = aws_lb.alb_strapi.arn
-#   port              = 80
-#   protocol          = "HTTP"
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.target_group.arn
-#   }
-# }
+# HTTP listener
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.alb_strapi.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group.arn
+  }
+}
 
 # HTTPS listener
 resource "aws_lb_listener" "https" {
@@ -52,7 +52,7 @@ resource "aws_lb_listener" "https" {
  resource "aws_security_group" "load_balancer_security_group" {
    name        = "load_balancer_security_group"
    description = "Security group for load balancer"
-   vpc_id      = aws_vpc.strapi_vpc.id
+   vpc_id      = aws_default_vpc.default_vpc.id
 
    ingress {
     from_port        = 80
